@@ -1,0 +1,16 @@
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\config\GymConfigProperties.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\controller\AnalyticsController.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\controller\AuthController.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\controller\GymConfigController.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\controller\OccupancyController.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\controller\OccupancyExceptionHandler.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\model\CapacityEvent.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\model\CapacityUpdate.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\model\GymConfig.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\model\HourlyPeak.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\model\OccupancyStatus.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\model\Usuario.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\PeakFitApplication.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\service\OccupancyService.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\websocket\CapacityWebSocketConfig.java
+C:\Users\Sebastian\OneDrive\Escritorio\PeakFitAPI\src\main\java\com\peakfit\websocket\CapacityWebSocketController.java

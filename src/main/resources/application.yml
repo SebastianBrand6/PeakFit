@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+peakfit:
+  gym:
+    max-capacity: 100
+    moderate-threshold-percent: 50
+    high-threshold-percent: 80
+    critical-threshold-percent: 95

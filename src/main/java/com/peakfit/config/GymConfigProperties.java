@@ -1,5 +1,6 @@
 package com.peakfit.config;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -28,6 +29,16 @@ public class GymConfigProperties {
     @Min(1)
     @Max(100)
     private int criticalThresholdPercent = 95;
+
+    @PostConstruct
+    public void validateThresholds() {
+        if (moderateThresholdPercent >= highThresholdPercent) {
+            throw new IllegalStateException("El umbral moderado debe ser menor que el alto.");
+        }
+        if (highThresholdPercent >= criticalThresholdPercent) {
+            throw new IllegalStateException("El umbral alto debe ser menor que el crítico.");
+        }
+    }
 
     public int getMaxCapacity() {
         return maxCapacity;

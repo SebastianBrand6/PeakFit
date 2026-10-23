@@ -1,5 +1,16 @@
 server:
   port: 8080
+  error: 
+    include-message: always
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/PeakFit?useUnicode=true&characterEncoding=UTF-8&serverTimezone=America/Bogota
+    username: root
+    password: ${DB_PASSWORD:Luisa1234}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
 
 peakfit:
   gym:

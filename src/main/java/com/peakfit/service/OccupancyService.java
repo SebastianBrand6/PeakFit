@@ -109,10 +109,11 @@ public class OccupancyService {
     /** Calcula el porcentaje y el nivel de ocupación para el instante indicado. */
     private CapacityUpdate createUpdate(Instant timestamp) {
         int currentOccupancy = presentUsers.size();
-        double percentage = currentOccupancy * 100.0 / config.getMaxCapacity();
+        int maxCapacity = Math.max(config.getMaxCapacity(), 1);
+        double percentage = maxCapacity > 0 ? (currentOccupancy * 100.0) / maxCapacity : 0.0;
         return new CapacityUpdate(
                 currentOccupancy,
-                config.getMaxCapacity(),
+                maxCapacity,
                 Math.round(percentage * 100.0) / 100.0,
                 resolveStatus(percentage),
                 timestamp

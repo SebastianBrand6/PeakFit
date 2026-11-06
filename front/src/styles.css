@@ -752,3 +752,495 @@ button:disabled {
     flex-direction: column;
   }
 }
+
+:root {
+  color: #17231e;
+  background: #f5f8f3;
+  --green: #23804e;
+  --green-dark: #17653d;
+  --border: #e4ebe4;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 82% 0%, #e8f3e8 0, transparent 34rem),
+    #f5f8f3;
+}
+
+.app-shell {
+  width: min(1320px, calc(100% - 72px));
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  min-height: 78px;
+  border-bottom-color: #e3ebe3cc;
+  background: #f5f8f3d9;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.brand {
+  gap: 11px;
+  font-size: 23px;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #40a76b, #17653d);
+  box-shadow: 0 5px 12px #17653d30;
+}
+
+.live-dot {
+  box-shadow: 0 0 0 4px #48a56b20;
+}
+
+.topbar-live {
+  padding: 8px 11px;
+  border: 1px solid #dcecdf;
+  border-radius: 30px;
+  background: #f0f8f1;
+  color: #287044;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.live-dot:not(.live-dot-offline) {
+  animation: live-pulse 2s infinite;
+}
+
+.backend-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 18px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  font-size: 13px;
+}
+
+.error-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.error-copy strong {
+  font-size: 14px;
+}
+
+.socket-notice {
+  margin-top: 10px;
+}
+
+.backend-retry {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 9px;
+  background: #a64c36;
+  color: white;
+  font-size: 12px;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.backend-retry:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #883b29;
+}
+
+.page-intro {
+  padding-top: 52px;
+}
+
+h1 {
+  max-width: 700px;
+  font-size: clamp(32px, 4vw, 48px);
+  letter-spacing: -2px;
+}
+
+.dashboard-grid {
+  grid-template-columns: minmax(0, 1.4fr) minmax(350px, 0.88fr);
+  gap: 22px;
+}
+
+.panel {
+  border-color: #e6ece5;
+  border-radius: 20px;
+  box-shadow: 0 12px 34px #263b2b0d, 0 2px 6px #263b2b07;
+}
+
+.map-panel,
+.occupancy-panel,
+.pricing-panel {
+  padding: 22px;
+}
+
+.gym-map {
+  height: 525px;
+  margin-top: 0;
+  border-radius: 16px;
+}
+
+.map-frame {
+  overflow: hidden;
+  margin-top: 18px;
+  border: 1px solid #e6ece5;
+  border-radius: 16px;
+  box-shadow: 0 8px 22px #263b2b14;
+}
+
+.gym-map {
+  border-radius: 0;
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin-top: 15px;
+}
+
+.map-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #526457;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.map-legend small {
+  color: #879188;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.legend-low {
+  background: #43a467;
+}
+
+.legend-medium {
+  background: #e3a32f;
+}
+
+.legend-high {
+  background: #df634f;
+}
+
+.gym-marker {
+  width: 23px;
+  height: 23px;
+  border: 3px solid white;
+  box-shadow: 0 3px 10px #17231e66;
+}
+
+.gym-marker-low {
+  background: #43a467;
+}
+
+.gym-marker-medium {
+  background: #e3a32f;
+}
+
+.gym-marker-high {
+  background: #df634f;
+}
+
+.gym-marker-selected {
+  transform: scale(1.25);
+  outline: 3px solid #17231e35;
+}
+
+.map-hint {
+  margin-top: 13px;
+}
+
+.gym-list-section {
+  margin: 0 0 26px;
+}
+
+.gym-list-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.gym-list-heading h2 {
+  margin: 0;
+  font-size: 21px;
+  letter-spacing: -0.6px;
+}
+
+.gym-count {
+  padding: 7px 11px;
+  border: 1px solid #e2eae1;
+  border-radius: 24px;
+  background: #fff;
+  color: #657168;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.gym-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.gym-card {
+  display: flex;
+  min-width: 0;
+  min-height: 170px;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 17px;
+  border: 1px solid #e5ebe4;
+  border-radius: 18px;
+  background: #ffffffd9;
+  box-shadow: 0 8px 22px #223a290d;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+}
+
+.gym-card:hover,
+.gym-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: #b7d5c0;
+  box-shadow: 0 16px 30px #223a2917;
+}
+
+.gym-card-selected {
+  border-color: #8ebd9c;
+  box-shadow: 0 0 0 2px #23804e16, 0 10px 24px #223a2910;
+}
+
+.gym-card-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.gym-card-brand {
+  overflow: hidden;
+  color: #78827b;
+  font-size: 10px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.gym-card .status-badge {
+  flex: 0 0 auto;
+  padding: 5px 7px;
+  font-size: 9px;
+}
+
+.gym-card-name {
+  overflow: hidden;
+  margin-top: 13px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gym-card-neighborhood {
+  overflow: hidden;
+  margin-top: 3px;
+  color: #879188;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gym-card-track {
+  overflow: hidden;
+  height: 7px;
+  margin-top: auto;
+  background: transparent;
+}
+
+.gym-card-track > span {
+  display: block;
+  height: 7px;
+  border-radius: 8px;
+  transition: width 350ms ease;
+}
+
+.gym-card-track.occupancy-track-low > span {
+  background: #54a772;
+}
+
+.gym-card-track.occupancy-track-medium > span {
+  background: #e4a941;
+}
+
+.gym-card-track.occupancy-track-high > span {
+  background: #e26b52;
+}
+
+.gym-card-capacity {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  color: #89928b;
+  font-size: 10px;
+}
+
+.gym-card-capacity strong {
+  color: #526457;
+}
+
+.gym-card-skeleton {
+  gap: 13px;
+  background: #ffffffa8;
+  cursor: default;
+}
+
+.gym-card-skeleton:hover {
+  transform: none;
+  border-color: #e5ebe4;
+  box-shadow: 0 8px 22px #223a290d;
+}
+
+.skeleton-line {
+  display: block;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #e8eee8 20%, #f5f8f4 50%, #e8eee8 80%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton-title {
+  width: 52%;
+  height: 12px;
+}
+
+.skeleton-subtitle {
+  width: 72%;
+  height: 10px;
+}
+
+.skeleton-meter {
+  width: 100%;
+  height: 7px;
+  margin-top: auto;
+}
+
+.skeleton-caption {
+  width: 80%;
+  height: 9px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@keyframes skeleton-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes live-pulse {
+  50% {
+    box-shadow: 0 0 0 7px #48a56b0c;
+  }
+}
+
+@media (max-width: 1100px) {
+  .gym-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    width: min(100% - 40px, 700px);
+  }
+
+  .gym-map {
+    height: 450px;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-shell {
+    width: calc(100% - 28px);
+  }
+
+  .topbar {
+    min-height: 66px;
+  }
+
+  .topbar-meta {
+    font-size: 11px;
+  }
+
+  .page-intro {
+    padding-top: 34px;
+  }
+
+  .gym-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gym-card {
+    min-height: 158px;
+  }
+
+  .backend-notice {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .backend-retry {
+    align-self: flex-start;
+  }
+
+  .map-legend {
+    gap: 9px 13px;
+  }
+
+  .gym-map {
+    height: 380px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

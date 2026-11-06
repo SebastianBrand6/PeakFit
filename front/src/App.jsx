@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import GymMap from './components/GymMap.jsx';
+import GymCards from './components/GymCards.jsx';
 import OccupancyStats from './components/OccupancyStats.jsx';
 import PricingPlans from './components/PricingPlans.jsx';
 import { useGymStore } from './store/useGymStore.js';
@@ -8,6 +9,7 @@ export default function App() {
   const gyms = useGymStore((state) => state.gyms);
   const selectedGymId = useGymStore((state) => state.selectedGymId);
   const selectGym = useGymStore((state) => state.selectGym);
+  const focusGym = useGymStore((state) => state.focusGym);
   const fetchGyms = useGymStore((state) => state.fetchGyms);
   const connectOccupancySocket = useGymStore((state) => state.connectOccupancySocket);
   const disconnectOccupancySocket = useGymStore((state) => state.disconnectOccupancySocket);
@@ -42,11 +44,11 @@ export default function App() {
           <span className="brand-mark" aria-hidden="true">P</span>
           <span>peak<span className="brand-accent">fit</span></span>
         </a>
-        <div className="topbar-meta">
+        <div className={`topbar-meta${socketStatus === 'connected' ? ' topbar-live' : ''}`} role="status">
           <span className={`live-dot${socketStatus === 'connected' ? '' : ' live-dot-offline'}`} aria-hidden="true" />
           <span>
             {socketStatus === 'connected'
-              ? 'Ocupación en vivo'
+              ? 'EN VIVO'
               : socketStatus === 'connecting'
                 ? 'Conectando con PeakFit'
                 : loadError
@@ -57,15 +59,15 @@ export default function App() {
       </header>
 
       {loading && (
-        <p className="backend-notice" role="status">Cargando sedes desde el servidor...</p>
+        <p className="sr-only" role="status">Cargando sedes desde el servidor</p>
       )}
       {loadError && (
-        <p className="backend-notice backend-error" role="alert">
-          No se pudieron cargar las sedes del backend: {loadError}
-          <br />
-          Se muestran temporalmente los datos de demostración.
-          <br />
-          Verifica que Spring Boot esté activo y permita solicitudes CORS desde esta aplicación.
+        <div className="backend-notice backend-error" role="alert">
+          <div className="error-copy">
+            <strong>No pudimos conectar con PeakFit</strong>
+            <span>{loadError}</span>
+            <span>Se muestran temporalmente datos de demostración. Verifica que Spring Boot esté activo.</span>
+          </div>
           <button
             className="backend-retry"
             type="button"
@@ -74,12 +76,12 @@ export default function App() {
           >
             Reintentar conexión
           </button>
-        </p>
+        </div>
       )}
       {socketError && (
-        <p className="backend-notice backend-error" role="alert">
+        <div className="backend-notice backend-error socket-notice" role="alert">
           Error en la conexión de ocupación en tiempo real: {socketError}
-        </p>
+        </div>
       )}
 
       <section className="page-intro">
@@ -104,6 +106,14 @@ export default function App() {
         </label>
       </section>
 
+      <GymCards
+        gyms={gyms}
+        loading={loading}
+        selectedGymId={selectedGymId}
+        onSelect={selectGym}
+        onFocus={focusGym}
+      />
+
       <section className="dashboard-grid" aria-label="Explorar gimnasios">
         <div className="map-panel panel">
           <div className="panel-heading">
@@ -115,7 +125,14 @@ export default function App() {
               <span aria-hidden="true">⌖</span> Medellín
             </span>
           </div>
-          <GymMap />
+          <div className="map-frame">
+            <GymMap />
+          </div>
+          <div className="map-legend" aria-label="Leyenda de ocupación">
+            <span><i className="legend-dot legend-low" /> Baja <small>&lt; 50%</small></span>
+            <span><i className="legend-dot legend-medium" /> Moderada <small>50–79%</small></span>
+            <span><i className="legend-dot legend-high" /> Alta <small>&gt; 80%</small></span>
+          </div>
           <p className="map-hint">Selecciona un marcador para cambiar de sede</p>
         </div>
 

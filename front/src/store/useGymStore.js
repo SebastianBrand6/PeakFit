@@ -2,13 +2,13 @@ import { create } from 'zustand';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
-const API_URL = 'http://localhost:8080/api/gyms';
+const API_URL = 'http://localhost:8080/api/gimnasios'; // Cambia esta URL según tu configuración de backend
 const SOCKET_URL = 'http://localhost:8080/ws-peakfit';
 
 export const getOccupancyStatus = (currentOccupancy, maxCapacity) => {
   const percentage = (currentOccupancy / maxCapacity) * 100;
 
-  if (percentage >= 80) return 'HIGH';
+  if (percentage > 80) return 'HIGH';
   if (percentage >= 50) return 'MEDIUM';
   return 'LOW';
 };
@@ -189,19 +189,19 @@ const normalizeGym = (rawGym) => {
     throw new TypeError('La API devolvió una sede con formato inválido.');
   }
 
-  const id = String(rawGym.id ?? rawGym.gymId ?? '');
+  const id = String(rawGym.idGimnasio ?? rawGym.id ?? rawGym.gymId ?? '');
   if (!id) throw new TypeError('La API devolvió una sede sin id.');
 
   const position = Array.isArray(rawGym.position) ? rawGym.position : [];
   const latitude = rawGym.latitude ?? rawGym.lat ?? position[0];
   const longitude = rawGym.longitude ?? rawGym.lng ?? position[1];
   const currentOccupancy = toNumber(
-    rawGym.currentOccupancy ?? rawGym.occupancy,
+    rawGym.currentOccupancy ?? rawGym.ocupacionActual ?? 0,
     'currentOccupancy',
     id,
   );
   const maxCapacity = toNumber(
-    rawGym.maxCapacity ?? rawGym.capacity,
+    rawGym.capacidadMaxima ?? rawGym.maxCapacity ?? rawGym.capacity ?? 100,
     'maxCapacity',
     id,
   );
@@ -245,12 +245,12 @@ const normalizeGym = (rawGym) => {
   return makeGym({
     ...rawGym,
     id,
-    name: rawGym.name ?? rawGym.gymName ?? `Sede ${id}`,
+    name: rawGym.nombre ?? rawGym.gymName ?? `Sede ${id}`,
     brand: rawGym.brand ?? 'Gimnasio',
     latitude: toNumber(latitude, 'latitude', id),
     longitude: toNumber(longitude, 'longitude', id),
-    address: rawGym.address ?? 'Dirección no disponible',
-    locationVerified: rawGym.locationVerified ?? Boolean(rawGym.address),
+    address: rawGym.direccion ?? 'Dirección no disponible',
+    locationVerified: rawGym.locationVerified ?? Boolean(rawGym.direccion ?? rawGym.address),
     currentOccupancy,
     maxCapacity,
     totalEntries: toNumber(rawGym.totalEntries ?? rawGym.entries ?? 0, 'totalEntries', id),
@@ -465,6 +465,7 @@ export const useGymStore = create((set, get) => {
   return {
     gyms: initialGyms,
     selectedGymId: initialGyms[0].id,
+    mapFocusGymId: initialGyms[0].id,
     loading: true,
     loadError: null,
     socketStatus: 'disconnected',
@@ -500,6 +501,7 @@ export const useGymStore = create((set, get) => {
           set({
             gyms: normalizedGyms,
             selectedGymId,
+            mapFocusGymId: selectedGymId,
             loading: false,
             loadError: null,
           });
@@ -532,8 +534,15 @@ export const useGymStore = create((set, get) => {
       if (!get().gyms.some((gym) => gym.id === gymId)) {
         throw new Error(`No se encontró el gimnasio "${gymId}".`);
       }
-      set({ selectedGymId: gymId });
+      set({ selectedGymId: gymId, mapFocusGymId: gymId });
       subscribeToSelectedGym();
+    },
+
+    focusGym: (gymId) => {
+      if (!get().gyms.some((gym) => gym.id === gymId)) {
+        throw new Error(`No se encontró el gimnasio "${gymId}".`);
+      }
+      set({ mapFocusGymId: gymId });
     },
 
     enterGym: recordEntries,

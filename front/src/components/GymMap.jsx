@@ -1,24 +1,42 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import L from 'leaflet';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { useGymStore } from '../store/useGymStore.js';
 
-const createGymIcon = (selected) => L.divIcon({
+const createGymIcon = (status, selected) => L.divIcon({
   className: 'gym-marker-icon',
-  html: `<span class="gym-marker${selected ? ' gym-marker-selected' : ''}"></span>`,
+  html: `<span class="gym-marker gym-marker-${status.toLowerCase()}${selected ? ' gym-marker-selected' : ''}"></span>`,
   iconSize: [28, 28],
   iconAnchor: [14, 14],
   popupAnchor: [0, -12],
 });
 
+function MapFocus({ gym }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (gym) map.flyTo([gym.latitude, gym.longitude], Math.max(map.getZoom(), 14), {
+      animate: true,
+      duration: 0.8,
+    });
+  }, [gym?.latitude, gym?.longitude, map]);
+
+  return null;
+}
+
 export default function GymMap() {
   const gyms = useGymStore((state) => state.gyms);
-  const selectedGymId = useGymStore((state) => state.selectedGymId);
+  const mapFocusGymId = useGymStore((state) => state.mapFocusGymId);
   const selectGym = useGymStore((state) => state.selectGym);
   const icons = useMemo(() => ({
-    default: createGymIcon(false),
-    selected: createGymIcon(true),
+    LOW: createGymIcon('LOW', false),
+    MEDIUM: createGymIcon('MEDIUM', false),
+    HIGH: createGymIcon('HIGH', false),
+    LOWSelected: createGymIcon('LOW', true),
+    MEDIUMSelected: createGymIcon('MEDIUM', true),
+    HIGHSelected: createGymIcon('HIGH', true),
   }), []);
+  const focusedGym = gyms.find((gym) => gym.id === mapFocusGymId);
 
   return (
     <MapContainer
@@ -32,11 +50,12 @@ export default function GymMap() {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <MapFocus gym={focusedGym} />
       {gyms.map((gym) => (
         <Marker
           key={gym.id}
           position={[gym.latitude, gym.longitude]}
-          icon={gym.id === selectedGymId ? icons.selected : icons.default}
+          icon={icons[`${gym.status}${gym.id === mapFocusGymId ? 'Selected' : ''}`]}
           eventHandlers={{ click: () => selectGym(gym.id) }}
         >
           <Popup>

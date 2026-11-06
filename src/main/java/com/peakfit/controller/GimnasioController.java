@@ -1,25 +1,10 @@
 package com.peakfit.controller;
 
-import com.peakfit.entity.Gimnasio;
-import com.peakfit.entity.Horario;
-import com.peakfit.entity.RegistroOcupacion;
-import com.peakfit.model.OcupacionGimnasio;
-import com.peakfit.model.PromedioPorHora;
-import com.peakfit.repository.GimnasioRepository;
-import com.peakfit.repository.HorarioRepository;
-import com.peakfit.repository.PromedioHora;
-import com.peakfit.repository.RegistroOcupacionRepository;
-import com.peakfit.repository.UsuarioRepository;
-import com.peakfit.service.OcupacionGimnasioService;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +18,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.peakfit.entity.Gimnasio;
+import com.peakfit.entity.Horario;
+import com.peakfit.entity.RegistroOcupacion;
+import com.peakfit.model.OcupacionGimnasio;
+import com.peakfit.model.PromedioPorHora;
+import com.peakfit.repository.GimnasioRepository;
+import com.peakfit.repository.HorarioRepository;
+import com.peakfit.repository.PromedioHora;
+import com.peakfit.repository.RegistroOcupacionRepository;
+import com.peakfit.repository.UsuarioRepository;
+import com.peakfit.service.OcupacionGimnasioService;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /** Gimnasios guardados en MySQL: datos, horarios y ocupación. */
 @RestController

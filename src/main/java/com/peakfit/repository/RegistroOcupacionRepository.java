@@ -1,14 +1,18 @@
 package com.peakfit.repository;
 
-import com.peakfit.entity.RegistroOcupacion;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.peakfit.entity.RegistroOcupacion;
 
 /** Consultas a la tabla registro_ocupacion. */
+@Repository
 public interface RegistroOcupacionRepository extends JpaRepository<RegistroOcupacion, Integer> {
 
     /** Último registro del gimnasio: sirve para saber cuánta gente hay ahora. */

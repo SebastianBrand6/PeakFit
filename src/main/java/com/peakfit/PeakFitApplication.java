@@ -15,3 +15,4 @@ public class PeakFitApplication {
         SpringApplication.run(PeakFitApplication.class, args);
     }
 }
+ 

@@ -1,0 +1,39 @@
+{
+  "groups": [
+    {
+      "name": "peakfit.gym",
+      "type": "com.peakfit.config.GymConfigProperties",
+      "sourceType": "com.peakfit.config.GymConfigProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "peakfit.gym.critical-threshold-percent",
+      "type": "java.lang.Integer",
+      "description": "Porcentaje a partir del cual la ocupación se considera crítica.",
+      "sourceType": "com.peakfit.config.GymConfigProperties"
+    },
+    {
+      "name": "peakfit.gym.high-threshold-percent",
+      "type": "java.lang.Integer",
+      "description": "Porcentaje a partir del cual la ocupación se considera alta.",
+      "sourceType": "com.peakfit.config.GymConfigProperties"
+    },
+    {
+      "name": "peakfit.gym.max-capacity",
+      "type": "java.lang.Integer",
+      "description": "Aforo máximo permitido; su valor predeterminado es 100 personas.",
+      "sourceType": "com.peakfit.config.GymConfigProperties"
+    },
+    {
+      "name": "peakfit.gym.moderate-threshold-percent",
+      "type": "java.lang.Integer",
+      "description": "Porcentaje a partir del cual la ocupación se considera moderada.",
+      "sourceType": "com.peakfit.config.GymConfigProperties"
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}

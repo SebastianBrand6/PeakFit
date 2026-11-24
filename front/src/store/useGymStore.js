@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
-const API_URL = 'http://localhost:8080/api/gimnasios'; // Cambia esta URL según tu configuración de backend
+const API_URL = 'http://localhost:8080/api/gimnasios';
 const SOCKET_URL = 'http://localhost:8080/ws-peakfit';
 
 export const getOccupancyStatus = (currentOccupancy, maxCapacity) => {
@@ -20,17 +20,17 @@ const makeGym = (gym) => ({
 
 const initialGyms = [
   makeGym({
-    id: 'smartfit-poblado',
+    id: '1',
     name: 'Smart Fit · El Poblado',
     brand: 'Smart Fit',
     neighborhood: 'El Poblado',
     latitude: 6.2088,
     longitude: -75.5712,
-    address: 'Sector El Poblado, Medellín (dirección por confirmar)',
+    address: 'Sector El Poblado, Medellín',
     locationVerified: false,
     currentOccupancy: 42,
     maxCapacity: 100,
-    totalEntries: 0,
+    totalEntries: 42,
     totalExits: 0,
     categories: ['Musculación', 'Cardio', 'Clases Grupales'],
     scheduleType: 'Diurno',
@@ -51,17 +51,17 @@ const initialGyms = [
     ],
   }),
   makeGym({
-    id: 'smartfit-laureles',
+    id: '2',
     name: 'Smart Fit · Laureles',
     brand: 'Smart Fit',
     neighborhood: 'Laureles',
     latitude: 6.2442,
     longitude: -75.5934,
-    address: 'Sector Laureles, Medellín (dirección por confirmar)',
+    address: 'Sector Laureles, Medellín',
     locationVerified: false,
     currentOccupancy: 68,
     maxCapacity: 100,
-    totalEntries: 0,
+    totalEntries: 68,
     totalExits: 0,
     categories: ['Musculación', 'Cardio', 'Clases Grupales'],
     scheduleType: 'Diurno',
@@ -82,17 +82,17 @@ const initialGyms = [
     ],
   }),
   makeGym({
-    id: 'bodytech-belen',
+    id: '3',
     name: 'Bodytech · Belén',
     brand: 'Bodytech',
     neighborhood: 'Belén',
     latitude: 6.2303,
     longitude: -75.5972,
-    address: 'Sector Belén, Medellín (dirección por confirmar)',
+    address: 'Sector Belén, Medellín',
     locationVerified: false,
     currentOccupancy: 35,
     maxCapacity: 90,
-    totalEntries: 0,
+    totalEntries: 35,
     totalExits: 0,
     categories: ['Musculación', 'Pilates', 'Yoga', 'Clases Grupales'],
     scheduleType: 'Diurno',
@@ -113,17 +113,17 @@ const initialGyms = [
     ],
   }),
   makeGym({
-    id: 'bodytech-robledo',
+    id: '4',
     name: 'Bodytech · Robledo',
     brand: 'Bodytech',
     neighborhood: 'Robledo',
     latitude: 6.2772,
     longitude: -75.5881,
-    address: 'Sector Robledo, Medellín (dirección por confirmar)',
+    address: 'Sector Robledo, Medellín',
     locationVerified: false,
     currentOccupancy: 77,
     maxCapacity: 90,
-    totalEntries: 0,
+    totalEntries: 77,
     totalExits: 0,
     categories: ['Musculación', 'Pilates', 'Yoga', 'Clases Grupales'],
     scheduleType: 'Diurno',
@@ -144,17 +144,17 @@ const initialGyms = [
     ],
   }),
   makeGym({
-    id: 'animal-x-medellin',
+    id: '5',
     name: 'Animal X · Medellín',
     brand: 'Animal X',
     neighborhood: 'El Poblado',
     latitude: 6.217,
     longitude: -75.567,
-    address: 'Sector El Poblado, Medellín (dirección por confirmar)',
+    address: 'Sector El Poblado, Medellín',
     locationVerified: false,
     currentOccupancy: 18,
     maxCapacity: 60,
-    totalEntries: 0,
+    totalEntries: 18,
     totalExits: 0,
     categories: ['Musculación', 'Entrenamiento Funcional', 'Clases Grupales'],
     scheduleType: 'Diurno',
@@ -176,12 +176,23 @@ const initialGyms = [
   }),
 ];
 
+const INITIAL_GYMS_BY_ID = Object.fromEntries(
+  initialGyms.map((gym) => [gym.id, gym]),
+);
+
 const toNumber = (value, field, gymId) => {
   const number = Number(value);
   if (!Number.isFinite(number)) {
     throw new TypeError(`El campo "${field}" de la sede "${gymId}" debe ser numérico.`);
   }
   return number;
+};
+
+const resolveCoordinate = (value, fallback, field, gymId) => {
+  if (value === undefined || value === null || value === '') {
+    return fallback;
+  }
+  return toNumber(value, field, gymId);
 };
 
 const normalizeGym = (rawGym) => {
@@ -192,18 +203,37 @@ const normalizeGym = (rawGym) => {
   const id = String(rawGym.idGimnasio ?? rawGym.id ?? rawGym.gymId ?? '');
   if (!id) throw new TypeError('La API devolvió una sede sin id.');
 
+  const baseGym = INITIAL_GYMS_BY_ID[id] ?? {
+    brand: 'Gimnasio',
+    neighborhood: rawGym.ciudad ?? 'Medellín',
+    latitude: 6.2442,
+    longitude: -75.5812,
+    currentOccupancy: 0,
+    maxCapacity: 100,
+    totalEntries: 0,
+    totalExits: 0,
+    categories: ['Musculación', 'Cardio'],
+    scheduleType: 'Diurno',
+    scheduleHours: '5:00 AM - 10:00 PM',
+    plans: [],
+  };
+
   const position = Array.isArray(rawGym.position) ? rawGym.position : [];
-  const latitude = rawGym.latitude ?? rawGym.lat ?? position[0];
-  const longitude = rawGym.longitude ?? rawGym.lng ?? position[1];
-  const currentOccupancy = toNumber(
-    rawGym.currentOccupancy ?? rawGym.ocupacionActual ?? 0,
-    'currentOccupancy',
-    id,
-  );
+  const rawLat = rawGym.latitude ?? rawGym.lat ?? rawGym.latitud ?? position[0];
+  const rawLng = rawGym.longitude ?? rawGym.lng ?? rawGym.longitud ?? position[1];
+  const latitude = resolveCoordinate(rawLat, baseGym.latitude, 'latitude', id);
+  const longitude = resolveCoordinate(rawLng, baseGym.longitude, 'longitude', id);
+
   const maxCapacity = toNumber(
-    rawGym.capacidadMaxima ?? rawGym.maxCapacity ?? rawGym.capacity ?? 100,
+    rawGym.capacidadMaxima ?? rawGym.maxCapacity ?? rawGym.capacity ?? baseGym.maxCapacity,
     'maxCapacity',
     id,
+  );
+
+  const rawOccupancy = rawGym.currentOccupancy ?? rawGym.ocupacionActual ?? baseGym.currentOccupancy;
+  const currentOccupancy = Math.min(
+    toNumber(rawOccupancy, 'currentOccupancy', id),
+    maxCapacity,
   );
 
   if (!Number.isInteger(currentOccupancy) || currentOccupancy < 0) {
@@ -213,14 +243,17 @@ const normalizeGym = (rawGym) => {
     throw new RangeError(`Capacidad máxima inválida para la sede "${id}".`);
   }
 
-  const categories = rawGym.categories ?? [];
-  const rawPlans = rawGym.plans ?? [];
-  if (!Array.isArray(categories) || !Array.isArray(rawPlans)) {
-    throw new TypeError(`Categorías o planes inválidos para la sede "${id}".`);
-  }
+  const categories = Array.isArray(rawGym.categories) && rawGym.categories.length > 0
+    ? rawGym.categories
+    : baseGym.categories;
+  const rawPlans = Array.isArray(rawGym.plans) && rawGym.plans.length > 0
+    ? rawGym.plans
+    : baseGym.plans;
+
   const normalizedCategories = categories.map((category) => (
     typeof category === 'string' ? category : category?.name ?? category?.label
   )).filter(Boolean);
+
   const plans = rawPlans.map((plan) => {
     if (!plan || typeof plan !== 'object') {
       throw new TypeError(`Plan inválido para la sede "${id}".`);
@@ -243,21 +276,23 @@ const normalizeGym = (rawGym) => {
   });
 
   return makeGym({
+    ...baseGym,
     ...rawGym,
     id,
-    name: rawGym.nombre ?? rawGym.gymName ?? `Sede ${id}`,
-    brand: rawGym.brand ?? 'Gimnasio',
-    latitude: toNumber(latitude, 'latitude', id),
-    longitude: toNumber(longitude, 'longitude', id),
-    address: rawGym.direccion ?? 'Dirección no disponible',
+    name: rawGym.nombre ?? rawGym.gymName ?? baseGym.name ?? `Sede ${id}`,
+    brand: rawGym.brand ?? baseGym.brand,
+    neighborhood: rawGym.neighborhood ?? rawGym.ciudad ?? baseGym.neighborhood,
+    latitude,
+    longitude,
+    address: rawGym.direccion ?? baseGym.address ?? 'Dirección no disponible',
     locationVerified: rawGym.locationVerified ?? Boolean(rawGym.direccion ?? rawGym.address),
     currentOccupancy,
     maxCapacity,
-    totalEntries: toNumber(rawGym.totalEntries ?? rawGym.entries ?? 0, 'totalEntries', id),
-    totalExits: toNumber(rawGym.totalExits ?? rawGym.exits ?? 0, 'totalExits', id),
+    totalEntries: toNumber(rawGym.totalEntries ?? rawGym.entries ?? baseGym.totalEntries, 'totalEntries', id),
+    totalExits: toNumber(rawGym.totalExits ?? rawGym.exits ?? baseGym.totalExits, 'totalExits', id),
     categories: normalizedCategories,
-    scheduleType: rawGym.scheduleType ?? 'No especificado',
-    scheduleHours: rawGym.scheduleHours ?? 'Horario por confirmar',
+    scheduleType: rawGym.scheduleType ?? baseGym.scheduleType,
+    scheduleHours: rawGym.scheduleHours ?? baseGym.scheduleHours,
     plans,
   });
 };
@@ -550,7 +585,6 @@ export const useGymStore = create((set, get) => {
     simulateEntry: recordEntries,
     simulateExit: recordExits,
 
-    // Permite conectar más adelante actualizaciones de la API o de un WebSocket.
     updateMetrics: (gymId, metrics) => updateGymMetrics(set, get, gymId, metrics),
   };
 });

@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties(GymConfigProperties.class)
 public class PeakFitApplication {
 
+    
     /** Punto de entrada que arranca el contexto de Spring Boot. */
     public static void main(String[] args) {
         SpringApplication.run(PeakFitApplication.class, args);

@@ -250,18 +250,30 @@ export default function App() {
             Encuentra tu sede ideal, revisa su ocupación y conoce sus planes.
           </p>
         </div>
-        <label className="gym-select-label" htmlFor="gym-select">
-          Sede seleccionada
-          <select
-            id="gym-select"
-            value={selectedGymId}
-            onChange={(event) => selectGym(event.target.value)}
-          >
-            {gyms.map((gym) => (
-              <option key={gym.id} value={gym.id}>{gym.name}</option>
-            ))}
-          </select>
-        </label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <label className="gym-select-label" htmlFor="gym-select">
+            Sede seleccionada
+            <select
+              id="gym-select"
+              value={selectedGymId}
+              onChange={(event) => selectGym(event.target.value)}
+            >
+              {gyms.map((gym) => (
+                <option key={gym.id} value={gym.id}>{gym.name}</option>
+              ))}
+            </select>
+          </label>
+          {selectedGym?.logo && (
+            <img
+              src={selectedGym.logo}
+              alt={selectedGym.brand || selectedGym.name}
+              style={{ height: '42px', width: 'auto', objectFit: 'contain' }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          )}
+        </div>
       </section>
 
       {/* BARRA DE BÚSQUEDA Y FILTRO DE CATEGORÍAS */}
@@ -379,6 +391,19 @@ export default function App() {
         </div>
 
         <div className="side-panels">
+          {selectedGym?.logo && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <img
+                src={selectedGym.logo}
+                alt={selectedGym.brand || selectedGym.name}
+                style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              <strong>{selectedGym.name}</strong>
+            </div>
+          )}
           {selectedGym && <OccupancyStats gym={selectedGym} />}
           {selectedGym && <PricingPlans gym={selectedGym} />}
         </div>

@@ -5,6 +5,12 @@ import SockJS from 'sockjs-client';
 const API_URL = 'http://localhost:8080/api/gimnasios';
 const SOCKET_URL = 'http://localhost:8080/ws-peakfit';
 
+const LOGO_BY_BRAND = {
+  'Smart Fit': '/logos/smartfit.png',
+  'Bodytech': '/logos/bodytech.png',
+  'Animal X': '/logos/animalx.png',
+};
+
 export const getOccupancyStatus = (currentOccupancy, maxCapacity) => {
   const percentage = (currentOccupancy / maxCapacity) * 100;
 
@@ -22,6 +28,7 @@ const initialGyms = [
   makeGym({
     id: '1',
     name: 'Smart Fit · El Poblado',
+    logo: '/logos/smartfit.png',
     brand: 'Smart Fit',
     neighborhood: 'El Poblado',
     latitude: 6.2088,
@@ -53,6 +60,7 @@ const initialGyms = [
   makeGym({
     id: '2',
     name: 'Smart Fit · Laureles',
+    logo: '/logos/smartfit.png',
     brand: 'Smart Fit',
     neighborhood: 'Laureles',
     latitude: 6.2442,
@@ -84,6 +92,7 @@ const initialGyms = [
   makeGym({
     id: '3',
     name: 'Bodytech · Belén',
+    logo: '/logos/bodytech.png',
     brand: 'Bodytech',
     neighborhood: 'Belén',
     latitude: 6.2303,
@@ -115,6 +124,7 @@ const initialGyms = [
   makeGym({
     id: '4',
     name: 'Bodytech · Robledo',
+    logo: '/logos/bodytech.png',
     brand: 'Bodytech',
     neighborhood: 'Robledo',
     latitude: 6.2772,
@@ -146,6 +156,7 @@ const initialGyms = [
   makeGym({
     id: '5',
     name: 'Animal X · Medellín',
+    logo: '/logos/animalx.png',
     brand: 'Animal X',
     neighborhood: 'El Poblado',
     latitude: 6.217,
@@ -275,9 +286,13 @@ const normalizeGym = (rawGym) => {
     };
   });
 
+const resolvedBrand = rawGym.brand ?? baseGym.brand;
+const logo = rawGym.logo ?? baseGym.logo ?? LOGO_BY_BRAND[resolvedBrand] ?? null;
+
   return makeGym({
     ...baseGym,
     ...rawGym,
+    logo,
     id,
     name: rawGym.nombre ?? rawGym.gymName ?? baseGym.name ?? `Sede ${id}`,
     brand: rawGym.brand ?? baseGym.brand,
